@@ -1,0 +1,11 @@
+import { Request, Response } from "express";
+import { ProfileUserService } from "../services/ProfileUserService";
+
+export class ProfileUserController {
+  async index(req: Request, res: Response) {
+    const { user_id } = req;
+    const service = new ProfileUserService();
+    const user = await service.execute(user_id);
+    return res.json(user)
+  }
+}
