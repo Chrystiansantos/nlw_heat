@@ -184,3 +184,24 @@ io.emit("new_message", infoWs);
   </body>
 </html>
 ```
+
+## Usando Socker.io no front
+
+Primeiro passo irei instalar a lib do socket da seguinte forma:
+
+```
+❯ yarn add socket.io-client
+```
+
+A seguir irei importar da seguitne forma:
+```ts
+import { io } from 'socket.io-client';
+
+const socket = io('http://localhost:4000');
+
+// dessa forma irei ouvir as mensagens
+socket.on('new_message', newMessage => {
+  console.log(newMessage);
+});
+
+```
