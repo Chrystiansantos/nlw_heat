@@ -194,14 +194,112 @@ Primeiro passo irei instalar a lib do socket da seguinte forma:
 ```
 
 A seguir irei importar da seguitne forma:
-```ts
-import { io } from 'socket.io-client';
 
-const socket = io('http://localhost:4000');
+```ts
+import { io } from "socket.io-client";
+
+const socket = io("http://localhost:4000");
 
 // dessa forma irei ouvir as mensagens
-socket.on('new_message', newMessage => {
+socket.on("new_message", (newMessage) => {
   console.log(newMessage);
 });
+```
 
+## Animação usando Moti.
+
+Primero preciso instalar o moti usando o yarn.
+
+```bash
+❯ yarn add moti
+❯ expo install react-native-reanimated
+```
+
+Agora dentro do meu arquivo babel config precisarei incluir o seguinte plugin:
+
+```js
+    plugins: ['react-native-reanimated/plugin'],
+```
+
+Dentro do meu componente animado irei importar o MotiView, para usar como View.
+
+```tsx
+import { MotiView } from "moti";
+
+<MotiView
+  // estado inicial da animacao
+  from={{ opacity: 0, translateY: -50 }}
+  // estado final da animacao
+  animate={{ opacity: 1, translateY: 0 }}
+  // duracao da animacao
+  transition={{ type: "timing", duration: 700 }}
+  style={styles.container}
+>
+  // Aqui dentro coloco os demais elementos do meu component
+</MotiView>;
+```
+
+## Autenticação com github
+
+Primeiro passo preciso instalar essas duas libs:
+
+```bash
+❯ expo install expo-auth-session expo-random
+```
+
+A seguir dentro do meu contexto responsavel por fazer o login irei importar tudo de dentro do expot-auth-session da seguinte maneira:
+
+```
+import * as AuthSession from 'expo-auth-session';
+```
+
+Irei no Github irei em developer setings e irei criar uma config usando o OAuth, apos preencher as informacoes ele ira me gerar a 2 chaves pra fazer a autenticacao:
+
+Irei em app.json acrescentar o seguinte obj:
+
+```json
+"scheme": "app",
+```
+
+E a seguir dentro da minha funcao que executa o sign irei passar o seguinte codigo para me autenticar com o Github:
+
+```ts
+const CLIENT_ID = "";
+const SCOPE = "user";
+
+const authUrl = `http://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&scope=${SCOPE}`;
+
+const signIn = async () => {
+  console.log("signin");
+  const { params } = (await AuthSession.startAsync({
+    authUrl,
+  })) as IAuthorizationResponse;
+
+  console.log(params);
+};
+```
+
+## Utilizando socket.io
+
+Primeiro passo irei instalar utilizando o seguinte comando:
+
+```bash
+❯ yarn add socket.io-client
+```
+
+Irei dentro do meu componente no caso de mensagem irei importar o socket.io client.
+
+import { io } from 'socket.io-client';
+
+Para ouvir as mensagens irei fazer da seguinte forma:
+
+```tsx
+const socket = io(String(api.defaults.baseURL));
+
+const messagesQueue: IMessage[] = [];
+
+socket.on('new_message', newMessage => {
+  messagesQueue.push(newMessage);
+  console.log(newMessage);
+});
 ```
